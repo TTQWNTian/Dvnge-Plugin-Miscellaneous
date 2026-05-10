@@ -1,0 +1,65 @@
+<!--
+Dvnge '视频剧情播放' 插件
+作者：Tian
+版本：v1.0.0
+该插件提供剧情中跳转视频剧情的HTML。
+在章节文件中这样写：
+  跳转HTML: {
+    路径: "视频剧情播放插件.html",
+    参数: `视频=你的视频路径/你的视频文件.mp4&章节=视频播放完后要跳转的章节名称(不用后缀)&节点=你要跳回的章节节点(数字)`
+  }
+-->
+<!DOCTYPE html>
+<html lang="zh-CH">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频剧情播放</title>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        video {
+            width: auto;
+            height: 100%;
+            /* 如果是竖屏这两个元素的值调换一下：width: 100%;height: auto; */
+        }
+    </style>
+</head>
+<body>
+    <video id="视频播放器" poster="视频封面路径(在视频播放第一帧显示，不要可以不改或者写一个错误路径，但删除会显示HTML5自带的)" autoplay>
+        <source id="视频源" src="" type="video/mp4">
+        您的设备不支持HTML5视频播放。
+    </video>
+
+    <script>
+        // 获取URL参数
+        const url参数 = new URLSearchParams(window.location.search);
+        const 视频路径 = url参数.get('视频');
+        const 章节 = url参数.get('章节');
+        const 节点 = url参数.get('节点');
+
+        // 设置视频源
+        document.getElementById('视频源').src = 视频路径;
+        document.getElementById('视频播放器').load();
+
+        // 视频播放结束后跳转
+        document.getElementById('视频播放器').addEventListener('ended', function() {
+            window.location.href = `?章节=${章节}&节点=${节点}`;
+        });
+    </script>
+</body>
+</html>

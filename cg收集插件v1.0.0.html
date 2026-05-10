@@ -1,0 +1,69 @@
+<!--
+Dvnge 'cg收集' 插件
+作者：Tian
+版本：v1.0.0
+此插件提供cg收集界面基本功能实现
+在章节文件中这样解锁CG：
+    解锁CG: {
+        名称: "cg名称",
+        路径: "你的CG图片路径/CG图片名称.jpg"
+    }
+-->
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>cg收集</title>
+    <style type="text/css" media="all">
+        * {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        img {
+            width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cg容器">
+        <h2>CG收集</h2>
+    </div>
+    
+    <script type="text/javascript" charset="utf-8">
+        // 从localStorage读取CG数据
+        function 显示已收集CG() {
+            const cg数据 = localStorage.getItem("Dvnge视觉小说引擎_CG收集库");
+            const cg容器 = document.getElementById("cg容器");
+            if (!cg数据) {
+                cg容器.innerHTML += "<p >暂无收集的CG</p>";
+                return;
+            }
+            try {
+                const cg列表 = JSON.parse(cg数据);
+                let html内容 = "";
+                for (const [cg名称, cg信息] of Object.entries(cg列表)) {
+                    html内容 += `
+                        <div class="cg项目" data-cg名称="${cg名称}" data-cg路径="${cg信息.路径}" data-cg时间="${cg信息.解锁时间}">
+                            <h3>${cg名称}</h3>
+                            <img src="${cg信息.路径}" alt="${cg名称}">
+                            <p>解锁时间: ${cg信息.解锁时间}</p>
+                        </div>
+                    `;
+                }
+                cg容器.innerHTML += html内容 || "<p >暂无收集的CG</p>";
+            } catch (e) {
+                cg容器.innerHTML += "<p>CG数据解析失败</p>";
+                console.error("CG数据解析错误:", e);
+            }
+        }
+        
+        // 页面加载时显示CG
+        window.addEventListener("DOMContentLoaded", 显示已收集CG);
+    </script>
+</body>
+
+</html>
